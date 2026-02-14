@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberAware – Stay Safe in the Digital World</title>
+</head>
+
+<body>
+
+<div id="notification" class="notification"></div>
+
+<header>
+<nav class="navbar">
+    <div class="logo">CyberAware</div>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#tools">Scam Tool</a></li>
+        <li><a href="#chatbot">Chatbot</a></li>
+        <li><a href="#videos">Videos</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="toggle-btn" onclick="toggleTheme()">🌙</button>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+</nav>
+</header>
+
+<section class="hero">
+    <h1>CyberAware – Stay Safe in the Digital World</h1>
+    <p>Empowering users with cybersecurity knowledge, scam detection tools, and AI-driven protection guidance.</p>
+</section>
+
+<section id="blog">
+    <h2>Cybersecurity Awareness</h2>
+    <div class="card-grid">
+        <div class="card">Digital Safety Basics</div>
+        <div class="card">Phishing Attacks</div>
+        <div class="card">Online Scams</div>
+        <div class="card">Password Security</div>
+    </div>
+</section>
+
+<section id="tools">
+    <h2>Phishing Detection Tool</h2>
+    <textarea id="scamInput" placeholder="Paste suspicious email or URL..."></textarea>
+    <button onclick="analyzeScam()">Analyze</button>
+    <div id="scamResult" class="result-box"></div>
+</section>
+
+<section id="chatbot">
+    <h2>AI Security Chatbot</h2>
+    <div class="chat-container">
+        <div id="chatWindow" class="chat-window"></div>
+        <input type="text" id="chatInput" placeholder="Ask about cybersecurity...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</section>
+
+<section id="videos">
+    <h2>Video Tutorials</h2>
+    <div class="card-grid">
+        <div class="card">How to Avoid Phishing</div>
+        <div class="card">Safe Browsing Habits</div>
+        <div class="card">Strong Password Creation</div>
+    </div>
+</section>
+
+<section id="contact">
+    <h2>Contact Us</h2>
+    <input type="text" id="name" placeholder="Your Name">
+    <input type="email" id="email" placeholder="Your Email">
+    <textarea id="message" placeholder="Your Message"></textarea>
+    <button onclick="submitContact()">Send Message</button>
+</section>
+
+<footer>
+© 2025 CyberAware | Stay Safe Online
+</footer>
+</body>
+</html>
