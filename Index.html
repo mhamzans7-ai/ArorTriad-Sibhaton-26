@@ -22,6 +22,7 @@
     --success: #4dff88;
     --text-dark: #ffffff;
     --text-light: #111827;
+    --transition-speed: 0.4s;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -30,7 +31,7 @@ body{
     background:var(--bg-dark);
     color:var(--text-dark);
     scroll-behavior:smooth;
-    transition:0.5s ease;
+    transition:background var(--transition-speed), color var(--transition-speed);
 }
 body.light{
     background:var(--bg-light);
@@ -47,6 +48,7 @@ body.light{
     background:var(--accent);
     z-index:3000;
     box-shadow:0 0 10px var(--accent);
+    transition:width 0.25s ease-out;
 }
 
 /* Header & Navbar */
@@ -58,7 +60,7 @@ header{
     backdrop-filter:blur(15px);
     padding:18px 40px;
     z-index:2000;
-    transition:0.4s ease;
+    transition:all var(--transition-speed) ease;
 }
 header.scrolled{
     padding:10px 40px;
@@ -90,7 +92,7 @@ header.scrolled{
     text-decoration:none;
     color:inherit;
     font-weight:500;
-    transition:0.3s;
+    transition:color var(--transition-speed);
     padding:5px 0;
 }
 .nav-links a::after{
@@ -101,7 +103,7 @@ header.scrolled{
     width:0%;
     height:2px;
     background:var(--accent);
-    transition:0.3s ease;
+    transition:width var(--transition-speed);
 }
 .nav-links a:hover::after,
 .nav-links a.active::after{
@@ -118,20 +120,34 @@ header.scrolled{
     border-radius:6px;
     background:var(--accent);
     font-size:1.1rem;
+    transition: transform 0.3s;
 }
+.toggle-btn:hover{transform: scale(1.1);}
 .hamburger{
     display:none;
     font-size:1.6rem;
     cursor:pointer;
 }
 
-/* Hero Section */
+/* Hero Section with gradient + particles */
 .hero{
-    padding:150px 20px 120px;
-    background:linear-gradient(135deg,#0b0f1a,#111827);
-    text-align:center;
     position:relative;
+    padding:150px 20px 120px;
+    text-align:center;
     overflow:hidden;
+    color:#fff;
+}
+.hero canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+}
+.hero-content{
+    position:relative;
+    z-index:2;
 }
 .hero h1{
     font-size:3rem;
@@ -145,7 +161,6 @@ header.scrolled{
 }
 .hero p{
     font-size:1.1rem;
-    opacity:0.8;
     margin-top:15px;
     opacity:0;
     transform:translateY(20px);
@@ -166,10 +181,11 @@ header.scrolled{
     transform:translateY(20px);
     animation:fadeInUp 1s forwards;
     animation-delay:0.6s;
+    box-shadow:0 4px 15px rgba(0,245,212,0.3);
 }
 .hero .cta:hover{
     transform:scale(1.05);
-    box-shadow:0 8px 25px rgba(0,245,212,0.3);
+    box-shadow:0 8px 25px rgba(0,245,212,0.5);
 }
 @keyframes fadeInUp{
     to{opacity:1; transform:translateY(0);}
@@ -179,10 +195,40 @@ header.scrolled{
 section{
     padding:100px 20px;
     text-align:center;
+    opacity:0;
+    transform:translateY(30px);
+    transition:all 0.8s ease;
+}
+section.visible{
+    opacity:1;
+    transform:translateY(0);
 }
 h2{
     font-size:2rem;
     margin-bottom:25px;
+}
+
+/* Stats */
+.stats{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    flex-wrap:wrap;
+}
+.stat-box{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.stat{
+    font-size:2rem;
+    font-weight:700;
+    color:var(--accent);
+    transition:all 0.5s ease;
+}
+.stat-label{
+    font-size:0.9rem;
+    opacity:0.7;
 }
 
 /* Cards */
@@ -193,28 +239,46 @@ h2{
     margin-top:30px;
 }
 .card{
+    perspective:1000px;
+    cursor:pointer;
+}
+.card-inner{
     background:var(--card-dark);
-    padding:25px;
     border-radius:18px;
-    transition:all 0.4s ease;
-    border:1px solid rgba(255,255,255,0.05);
+    padding:25px;
     display:flex;
     flex-direction:column;
     align-items:center;
     gap:12px;
-    cursor:pointer;
+    transition:transform 0.6s;
+    transform-style: preserve-3d;
+    border:1px solid rgba(255,255,255,0.05);
+}
+.card:hover .card-inner{
+    transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    box-shadow:0 20px 40px rgba(0,245,212,0.3);
+    border:1px solid var(--accent);
+    background: linear-gradient(135deg,#00f5d4,#4dff88);
+    color:#000;
 }
 .card i{
     font-size:2rem;
     color:var(--accent);
 }
-body.light .card{background:var(--card-light);}
-.card:hover{
-    transform: translateY(-12px) scale(1.05);
-    box-shadow: 0 20px 40px rgba(0,245,212,0.3);
-    border: 1px solid var(--accent);
-    background: linear-gradient(135deg, #00f5d4, #4dff88);
-    color:#000;
+
+/* Video card hover zoom */
+.card-inner img {
+    transition: transform 0.3s ease;
+}
+.card-inner:hover img {
+    transform: scale(1.05);
+}
+.play-icon {
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+.card-inner:hover .play-icon {
+    transform: scale(1.2);
+    text-shadow: 0 0 15px rgba(255,255,255,0.9);
 }
 
 /* Forms & Scam Tool */
@@ -226,10 +290,9 @@ textarea,input{
     border:none;
     outline:none;
     font-size:0.95rem;
+    transition:box-shadow 0.3s ease;
 }
-input:focus,textarea:focus{
-    box-shadow:0 0 12px rgba(0,245,212,0.4);
-}
+input:focus,textarea:focus{box-shadow:0 0 12px var(--accent);}
 button{
     padding:12px 25px;
     background:var(--accent);
@@ -238,10 +301,7 @@ button{
     cursor:pointer;
     transition:0.3s;
 }
-button:hover{
-    opacity:0.85;
-    transform:translateY(-2px);
-}
+button:hover{opacity:0.85; transform:translateY(-2px);}
 
 /* Result Box */
 .result-box{
@@ -249,6 +309,11 @@ button:hover{
     padding:12px;
     border-radius:10px;
     font-weight:600;
+    transition:all 0.3s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
 }
 
 /* Chat */
@@ -272,6 +337,13 @@ button:hover{
     max-width:75%;
     font-size:0.9rem;
     word-wrap:break-word;
+    opacity:0;
+    transform:translateY(10px);
+    transition:all 0.4s ease;
+}
+.message.show{
+    opacity:1;
+    transform:translateY(0);
 }
 .user{
     background:var(--accent);
@@ -282,10 +354,7 @@ button:hover{
     background:#1f2937;
     color:#fff;
 }
-.typing{
-    font-style:italic;
-    opacity:0.7;
-}
+.typing{font-style:italic; opacity:0.7;}
 
 /* Footer */
 footer{
@@ -307,16 +376,144 @@ footer{
         width:200px;
         transition:0.4s ease;
     }
-    .nav-links.active{
-        right:20px;
-    }
+    .nav-links.active{right:20px;}
     .hamburger{display:block;}
     .hero h1{font-size:2rem;}
     .hero p{font-size:1rem;}
 }
+
+/* Blog Modal */
+#blogModal {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:5000;
+  pointer-events:none;
+}
+
+.blog-overlay {
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(5px);
+  opacity:0;
+  transition:opacity 0.4s ease;
+}
+
+.blog-content {
+  position:relative;
+  background:var(--card-dark);
+  color:var(--text-dark);
+  padding:25px 30px;
+  max-width:700px;
+  width:90%;
+  border-radius:18px;
+  text-align:left;
+  transform: translateY(-50px);
+  opacity:0;
+  transition: all 0.5s ease;
+  pointer-events:auto;
+  box-shadow:0 20px 40px rgba(0,245,212,0.3);
+  overflow-y:auto;
+  max-height:80%;
+}
+
+#blogModal.show .blog-overlay {
+  opacity:1;
+}
+
+#blogModal.show .blog-content {
+  opacity:1;
+  transform: translateY(0);
+}
+
+.close-blog {
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:none;
+  border:none;
+  font-size:1.5rem;
+  color:var(--accent);
+  cursor:pointer;
+  transition: transform 0.3s;
+}
+.close-blog:hover {
+  transform: rotate(90deg) scale(1.2);
+}
+
+.blog-nav {
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.blog-nav button {
+  background:var(--accent);
+  color:#000;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.blog-nav button:hover {
+  transform:translateY(-2px);
+  opacity:0.85;
+}
+
+/* Animate blog paragraphs line by line */
+.blog-content p span {
+  display: block;
+  opacity: 0;
+  transform: translateY(15px) scale(0.95);
+  transition: all 0.4s ease;
+}
+
+.blog-content p span.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Slight zoom effect for blog content */
+.blog-content.fade-in {
+  opacity:1;
+  transform: translateY(0) scale(1);
+  transition: all 0.4s ease;
+}
+
+.blog-content.fade-out {
+  opacity:0;
+  transform: translateY(-20px) scale(0.98);
+  transition: all 0.3s ease;
+}
+
+/* Blog reading progress bar */
+.blog-scroll-bar {
+  position:absolute;
+  top:0;
+  right:5px;
+  width:6px;
+  height:100%;
+  background:rgba(255,255,255,0.1);
+  border-radius:3px;
+}
+
+#blogScrollProgress {
+  width:100%;
+  height:0%;
+  background:var(--accent);
+  border-radius:3px;
+  transition: height 0.2s ease;
+}
 </style>
 </head>
-
 <body>
 
 <div id="progressBar"></div>
@@ -337,20 +534,49 @@ footer{
 </header>
 
 <section class="hero">
+<canvas id="particleCanvas"></canvas>
+<div class="hero-content">
 <h1>CyberAware – Stay Safe in the Digital World</h1>
-<p>Empowering users with cybersecurity knowledge, scam detection tools, and AI-driven protection guidance.</p>
+<p>Empowering users with cybersecurity knowledge, scam detection tools, and AI-driven guidance.</p>
 <button class="cta" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">Try Scam Detector</button>
+</div>
+</section>
+
+<section id="stats">
+<h2>Platform Impact</h2>
+<div class="stats">
+<div class="stat-box"><div class="stat" data-target="1200">0</div><div class="stat-label">Threats Analyzed</div></div>
+<div class="stat-box"><div class="stat" data-target="500">0</div><div class="stat-label">Users Protected</div></div>
+<div class="stat-box"><div class="stat" data-target="98">0</div><div class="stat-label">Detection Accuracy %</div></div>
+</div>
 </section>
 
 <section id="blog">
 <h2>Cybersecurity Awareness</h2>
 <div class="card-grid">
-<div class="card"><i class="fa-solid fa-shield"></i><div>Digital Safety Basics</div></div>
-<div class="card"><i class="fa-solid fa-envelope"></i><div>Phishing Attacks</div></div>
-<div class="card"><i class="fa-solid fa-user-secret"></i><div>Online Scams</div></div>
-<div class="card"><i class="fa-solid fa-key"></i><div>Password Security</div></div>
+<div class="card"><div class="card-inner"><i class="fa-solid fa-shield"></i><div>Digital Safety Basics</div></div></div>
+<div class="card"><div class="card-inner"><i class="fa-solid fa-envelope"></i><div>Phishing Attacks</div></div></div>
+<div class="card"><div class="card-inner"><i class="fa-solid fa-user-secret"></i><div>Online Scams</div></div></div>
+<div class="card"><div class="card-inner"><i class="fa-solid fa-key"></i><div>Password Security</div></div></div>
 </div>
 </section>
+
+<!-- Blog Modal -->
+<div id="blogModal" style="display:none;">
+  <div class="blog-overlay"></div>
+  <div class="blog-content">
+    <button class="close-blog">&times;</button>
+    <h3 id="blogTitle"></h3>
+    <div id="blogTextContainer" style="position:relative;">
+      <p id="blogText"></p>
+      <div class="blog-scroll-bar"><div id="blogScrollProgress"></div></div>
+    </div>
+    <div class="blog-nav">
+      <button id="prevBlog">&larr; Previous</button>
+      <button id="nextBlog">Next &rarr;</button>
+    </div>
+  </div>
+</div>
 
 <section id="tools">
 <h2>Phishing Detection Tool</h2>
@@ -371,9 +597,36 @@ footer{
 <section id="videos">
 <h2>Video Tutorials</h2>
 <div class="card-grid">
-<div class="card"><i class="fa-solid fa-video"></i><div>How to Avoid Phishing</div></div>
-<div class="card"><i class="fa-solid fa-laptop"></i><div>Safe Browsing Habits</div></div>
-<div class="card"><i class="fa-solid fa-lock"></i><div>Strong Password Creation</div></div>
+<!-- Clicking opens YouTube directly -->
+<div class="card" onclick="window.open('https://www.youtube.com/watch?v=Yz0PnAkeRiI','_blank')">
+  <div class="card-inner">
+    <div style="position:relative; width:100%; height:0; padding-bottom:56.25%;">
+      <img src="https://img.youtube.com/vi/Yz0PnAkeRiI/hqdefault.jpg" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px; object-fit:cover;" />
+      <i class="fa-solid fa-play play-icon" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; color:white; opacity:0.9;"></i>
+    </div>
+    <div style="margin-top:10px; font-weight:600;">How to Avoid Phishing</div>
+  </div>
+</div>
+
+<div class="card" onclick="window.open('https://www.youtube.com/watch?v=aO858HyFbKI','_blank')">
+  <div class="card-inner">
+    <div style="position:relative; width:100%; height:0; padding-bottom:56.25%;">
+      <img src="https://img.youtube.com/vi/aO858HyFbKI/hqdefault.jpg" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px; object-fit:cover;" />
+      <i class="fa-solid fa-play play-icon" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; color:white; opacity:0.9;"></i>
+    </div>
+    <div style="margin-top:10px; font-weight:600;">Safe Browsing Habits</div>
+  </div>
+</div>
+
+<div class="card" onclick="window.open('https://www.youtube.com/watch?v=YeUFL3GTFT0','_blank')">
+  <div class="card-inner">
+    <div style="position:relative; width:100%; height:0; padding-bottom:56.25%;">
+      <img src="https://img.youtube.com/vi/YeUFL3GTFT0/hqdefault.jpg" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px; object-fit:cover;" />
+      <i class="fa-solid fa-play play-icon" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; color:white; opacity:0.9;"></i>
+    </div>
+    <div style="margin-top:10px; font-weight:600;">Strong Password Creation</div>
+  </div>
+</div>
 </div>
 </section>
 
@@ -385,70 +638,287 @@ footer{
 <button id="contactBtn">Send Message</button>
 </section>
 
-<footer>
-© 2025 CyberAware | Stay Safe Online
-</footer>
+<footer>© 2025 CyberAware | Stay Safe Online</footer>
 
 <script>
 // Scroll Progress & Header
 window.addEventListener("scroll",()=>{
-const scrollTop=document.documentElement.scrollTop;
-const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
-document.getElementById("progressBar").style.width=(scrollTop/height)*100+"%";
-document.querySelector("header").classList.toggle("scrolled",window.scrollY>50);
+  const scrollTop=document.documentElement.scrollTop;
+  const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  document.getElementById("progressBar").style.width=(scrollTop/height)*100+"%";
+  document.querySelector("header").classList.toggle("scrolled",window.scrollY>50);
+  document.querySelectorAll("section").forEach(sec=>{
+    const top=sec.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100) sec.classList.add("visible");
+  });
 });
 
-// Theme Toggle with Persistence
+// Theme Toggle
 const themeBtn=document.getElementById("themeBtn");
 if(localStorage.getItem("theme")==="light") document.body.classList.add("light");
 themeBtn.addEventListener("click",()=>{
-document.body.classList.toggle("light");
-localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark");
+  document.body.classList.toggle("light");
+  themeBtn.innerText=document.body.classList.contains("light")?"🌙":"☀️";
+  localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark");
 });
 
 // Hamburger Menu
-document.getElementById("menuBtn").addEventListener("click",()=>{
-document.getElementById("navLinks").classList.toggle("active");
-});
+document.getElementById("menuBtn").addEventListener("click",()=>{document.getElementById("navLinks").classList.toggle("active");});
+document.querySelectorAll(".nav-links a").forEach(link=>{link.addEventListener("click",()=>{document.getElementById("navLinks").classList.remove("active");});});
+
+// Stats counters
+const counters = document.querySelectorAll('.stat');
+const observer = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const counter = entry.target;
+      const updateCounter = () => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+        const increment = target/200;
+        if(count < target){counter.innerText = Math.ceil(count+increment);setTimeout(updateCounter,10);}
+        else counter.innerText = target;
+      };
+      updateCounter();
+      obs.unobserve(counter);
+    }
+  });
+},{threshold:0.5});
+counters.forEach(counter=>observer.observe(counter));
 
 // Scam Tool
 document.getElementById("analyzeBtn").addEventListener("click",()=>{
-const input=document.getElementById("scamInput").value.trim();
-const result=document.getElementById("scamResult");
-if(!input){result.innerText="Please enter content."; result.style.color="var(--danger)"; return;}
-result.innerText="Analyzing...";
-setTimeout(()=>{
-if(input.toLowerCase().includes("urgent")||input.toLowerCase().includes("password")||/(https?:\/\/[^\s]+)/.test(input)){
-result.innerText="⚠ High Risk Detected!";
-result.style.color="var(--danger)";
-}else{
-result.innerText="✓ Appears Safe (Demo)";
-result.style.color="var(--success)";
-}
-},1000);
+  const input=document.getElementById("scamInput").value.trim();
+  const result=document.getElementById("scamResult");
+  if(!input){result.innerText="Please enter content."; result.style.color="var(--danger)"; return;}
+  result.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Analyzing';
+  setTimeout(()=>{
+    if(input.toLowerCase().includes("urgent")||input.toLowerCase().includes("password")||/(https?:\/\/[^\s]+)/.test(input)){
+      result.innerHTML='⚠ High Risk Detected!';
+      result.style.color="var(--danger)";
+    }else{
+      result.innerHTML='✓ Appears Safe (Demo)';
+      result.style.color="var(--success)";
+    }
+  },1500);
 });
 
 // Chatbot
-document.getElementById("sendBtn").addEventListener("click",sendMessage);
-document.getElementById("chatInput").addEventListener("keypress",e=>{if(e.key==="Enter") sendMessage();});
-function sendMessage(){
-const input=document.getElementById("chatInput");
-const chat=document.getElementById("chatWindow");
-if(!input.value) return;
-chat.innerHTML+=`<div class="message user">${input.value}</div>`;
-chat.innerHTML+=`<div class="message bot typing">Typing...</div>`;
-chat.scrollTop=chat.scrollHeight;
-setTimeout(()=>{
-document.querySelector(".typing").remove();
-const responses=[
-"Always verify links before clicking and enable two-factor authentication.",
-"Use strong, unique passwords for each account.",
-"Beware of phishing emails asking for personal info."
+
+const chatWindow = document.getElementById("chatWindow");
+const chatInput = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendBtn");
+
+// FAQ questions and answers
+const faq = [
+  { q: "What is digital safety?", a: "Digital safety is the practice of protecting your personal data and privacy online." },
+  { q: "What is phishing?", a: "Phishing is when cybercriminals trick you into revealing personal information via fake messages or websites." },
+  { q: "How can I secure my passwords?", a: "Use strong, unique passwords for each account and enable two-factor authentication." },
+  { q: "What are online scams?", a: "Online scams are fraudulent schemes to steal money or personal information from users." },
+  { q: "How to protect against phishing emails?", a: "Verify the sender, avoid clicking suspicious links, and never share sensitive information." },
+  { q: "Can I recover deleted messages?", a: "It depends on the platform; always back up important data regularly." }
 ];
-chat.innerHTML+=`<div class="message bot">${responses[Math.floor(Math.random()*responses.length)]}</div>`;
-chat.scrollTop=chat.scrollHeight;
-},1000);
-input.value="";
+
+// Display FAQ buttons
+function showFAQButtons() {
+  const faqContainer = document.createElement("div");
+  faqContainer.id = "faqContainer";
+  faqContainer.style.marginBottom = "15px"; // spacing from chat
+  faq.forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "faq-btn";
+    btn.innerText = item.q;
+    btn.style.display = "block";      // each question on new line
+    btn.style.margin = "5px 0";       // spacing between buttons
+    btn.style.padding = "8px 12px";   // padding for better look
+    btn.style.width = "100%";         // full width of chat window
+    btn.style.borderRadius = "5px";   // rounded corners
+    btn.style.cursor = "pointer";
+    btn.addEventListener("click", () => handleFAQClick(item));
+    faqContainer.appendChild(btn);
+  });
+  chatWindow.appendChild(faqContainer);
+}
+
+// Handle FAQ click
+function handleFAQClick(item) {
+  // Show user question
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user show";
+  userMsg.innerText = item.q;
+  chatWindow.appendChild(userMsg);
+
+  // Show bot typing
+  const botMsg = document.createElement("div");
+  botMsg.className = "message bot typing show";
+  botMsg.innerText = "Typing...";
+  chatWindow.appendChild(botMsg);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  setTimeout(() => {
+    botMsg.remove();
+    const botReply = document.createElement("div");
+    botReply.className = "message bot show";
+    botReply.innerText = item.a;
+    chatWindow.appendChild(botReply);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }, 800);
+}
+
+// Optional: allow user to type custom messages
+sendBtn.addEventListener("click", sendMessage);
+chatInput.addEventListener("keypress", e => { if(e.key === "Enter") sendMessage(); });
+
+function sendMessage() {
+  const message = chatInput.value.trim();
+  if(!message) return;
+
+  // Show user message
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user show";
+  userMsg.innerText = message;
+  chatWindow.appendChild(userMsg);
+
+  // Show bot typing
+  const botMsg = document.createElement("div");
+  botMsg.className = "message bot typing show";
+  botMsg.innerText = "Typing...";
+  chatWindow.appendChild(botMsg);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  setTimeout(() => {
+    botMsg.remove();
+    let reply = "Sorry, I don't have an answer for that. Please try a listed question.";
+    const inputLower = message.toLowerCase();
+    for (let item of faq) {
+      if (inputLower.includes(item.q.toLowerCase().replace(/\?/g,''))) {
+        reply = item.a;
+        break;
+      }
+    }
+    const botReply = document.createElement("div");
+    botReply.className = "message bot show";
+    botReply.innerText = reply;
+    chatWindow.appendChild(botReply);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }, 800);
+
+  chatInput.value = "";
+}
+
+// Initialize FAQ buttons
+showFAQButtons();
+
+// Particle Network
+const canvas=document.getElementById('particleCanvas');
+const ctx=canvas.getContext('2d');
+let particlesArray=[];
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight; initParticles();});
+class Particle{constructor(x,y,size,speedX,speedY){this.x=x;this.y=y;this.size=size;this.speedX=speedX;this.speedY=speedY;}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle='rgba(0,245,212,0.6)';ctx.fill();}update(){this.x+=this.speedX; this.y+=this.speedY;if(this.x>canvas.width||this.x<0)this.speedX*=-1;if(this.y>canvas.height||this.y<0)this.speedY*=-1;}}
+function initParticles(){particlesArray=[];for(let i=0;i<80;i++){let size=Math.random()*2+1;let x=Math.random()*canvas.width; let y=Math.random()*canvas.height; let speedX=(Math.random()-0.5)*0.7; let speedY=(Math.random()-0.5)*0.7; particlesArray.push(new Particle(x,y,size,speedX,speedY));}}
+function connect(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x;let dy=particlesArray[a].y-particlesArray[b].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<90){ctx.beginPath();ctx.strokeStyle='rgba(0,245,212,0.2)';ctx.lineWidth=1;ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();}}}}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particlesArray.forEach(p=>{p.update();p.draw();});connect();requestAnimationFrame(animate);}
+initParticles();animate();
+
+// Blogs
+const blogs = {
+  "Digital Safety Basics": `Digital safety is about protecting yourself and your personal information while navigating the online world. Every action you take online from shopping and banking to social media interactions carries potential risks. Simple yet consistent safety practices can greatly reduce exposure to cyber threats.
+A fundamental step is using strong, unique passwords for every account. Password managers can help generate and securely store complex passwords. Enabling two-factor authentication (2FA) adds another layer of protection, making it harder for hackers to access your accounts even if they have your password.
+Awareness is equally important. Phishing emails, suspicious links, and unsafe downloads are common methods cybercriminals use to steal data. Always verify the source before clicking or sharing information. Additionally, keeping your software and devices updated ensures security patches fix vulnerabilities that attackers might exploit.
+Another aspect of digital safety is responsible sharing. Avoid oversharing personal details such as home addresses, travel plans, or banking information. Public Wi-Fi networks should be used cautiously, and a VPN can help encrypt your connection for added safety.
+Lastly, regularly back up your data. Whether using an external drive or cloud storage, backups protect your information against cyberattacks, hardware failures, or accidental deletions.
+By integrating these habits into daily online activity, you build a strong foundation for digital safety and reduce the risk of being targeted by cybercriminals.`,
+  "Phishing Attacks": `Phishing attacks are one of the most prevalent threats online. These scams involve cybercriminals impersonating trusted organizations to trick users into sharing sensitive information, such as passwords, credit card numbers, or social security details. Phishing can occur via email, text messages (smishing), phone calls (vishing), or fake websites.
+A typical example is receiving an email claiming to be from PayPal or Amazon, warning about account issues. The message includes a link to a fraudulent website designed to capture login credentials. Spear phishing, a more targeted approach, tailors messages to specific individuals, increasing the likelihood of success.
+Recognizing phishing attacks involves looking for warning signs such as generic greetings, urgent language, suspicious links, and poor grammar. Hovering over links to check the actual URL and verifying the sender’s email address are crucial precautions.
+Protecting yourself also includes enabling two-factor authentication, keeping devices updated, and using spam filters to block suspicious messages. Education is key: the more familiar you are with phishing tactics, the less likely you are to fall victim.
+Ultimately, phishing attacks exploit human trust and urgency. Awareness, vigilance, and careful verification of messages are the best defenses against these deceptive cyber threats.`,
+  "Online Scams": `Online scams extend beyond phishing and can take many forms, targeting users’ money, personal information, or both. Scammers exploit the internet’s reach to impersonate trusted companies, manipulate emotions, and lure victims with seemingly attractive offers.
+Common scams include fake online shopping websites, where products never arrive; romance scams, which exploit emotions on dating apps or social media; investment and cryptocurrency scams, promising high returns with low risk; and tech support scams, where attackers claim to fix non-existent computer issues. Fraudulent messages often create urgency, pushing users to act without thinking.
+Red flags of online scams include offers that seem too good to be true, requests for immediate payment via gift cards or cryptocurrency, poor spelling, and suspicious URLs. Trusting your instincts is critical if something feels off, it probably is.
+Preventive measures include verifying sources before sharing information, using strong security practices such as 2FA, monitoring accounts regularly, and reporting suspicious activity. Education is vital; being informed reduces the chances of falling victim to scams.
+By maintaining vigilance and practicing caution, you can enjoy the convenience of the internet without compromising your security. Online scams thrive on inattention, so staying aware is your strongest defense.`,
+  "Password Security": `Passwords are the gateway to your digital identity. Weak or reused passwords make it easy for hackers to gain access to accounts and sensitive information. Maintaining strong password security is essential for personal and professional digital safety.
+A strong password should combine uppercase and lowercase letters, numbers, and special characters. Avoid predictable information such as birthdays or common words. Every account should have a unique password to prevent a single breach from affecting multiple accounts.
+Password managers like 1Password or LastPass can generate complex passwords and store them securely. Additionally, enabling two-factor authentication ensures that even if a password is compromised, unauthorized access is still difficult.
+Regularly updating passwords, monitoring accounts for suspicious activity, and securing recovery options are other key practices. Avoid sharing passwords, storing them in unsecured files, or using easily guessable answers for security questions.
+Strong password habits are the foundation of digital security. Combining complex passwords, unique credentials for each account, and 2FA significantly reduces the risk of unauthorized access. Protecting your passwords means protecting your identity, finances, and personal information in the digital world`
+};
+
+const blogModal = document.getElementById("blogModal");
+const blogTitle = document.getElementById("blogTitle");
+const blogText = document.getElementById("blogText");
+const blogContent = blogModal.querySelector(".blog-content");
+const blogTextContainer = document.getElementById("blogTextContainer");
+const blogScrollProgress = document.getElementById("blogScrollProgress");
+
+let blogKeys = Object.keys(blogs);
+let currentBlogIndex = 0;
+
+// Open modal when clicking blog cards
+document.querySelectorAll("#blog .card").forEach((card,i)=>{
+  card.addEventListener("click",()=>{
+    blogModal.style.display="flex";
+    showBlog(i);
+  });
+});
+
+// Close modal
+blogModal.querySelector(".close-blog").addEventListener("click",()=>{
+  blogModal.style.display="none";
+});
+
+// Blog navigation
+document.getElementById("prevBlog").addEventListener("click",()=>{showBlog(currentBlogIndex-1);});
+document.getElementById("nextBlog").addEventListener("click",()=>{showBlog(currentBlogIndex+1);});
+
+// Scroll progress
+blogTextContainer.addEventListener("scroll", ()=>{
+  const scrollTop = blogTextContainer.scrollTop;
+  const scrollHeight = blogTextContainer.scrollHeight - blogTextContainer.clientHeight;
+  const progress = (scrollTop / scrollHeight) * 100;
+  blogScrollProgress.style.height = progress + "%";
+});
+
+// Reset scroll
+function resetBlogScroll(){
+  blogTextContainer.scrollTop = 0;
+  blogScrollProgress.style.height = "0%";
+}
+
+// Show blog with animation
+function showBlog(index){
+  if(index < 0) index = blogKeys.length-1;
+  if(index >= blogKeys.length) index = 0;
+  currentBlogIndex = index;
+
+  blogContent.classList.remove("fade-in");
+  blogContent.classList.add("fade-out");
+
+  setTimeout(()=>{
+    const key = blogKeys[currentBlogIndex];
+    blogTitle.innerText = key;
+
+    const paragraphs = blogs[key].split("\n").filter(p => p.trim() !== "");
+    blogText.innerHTML="";
+    paragraphs.forEach(p=>{
+      const span = document.createElement("span");
+      span.innerText = p;
+      blogText.appendChild(span);
+    });
+
+    blogContent.classList.remove("fade-out");
+    blogContent.classList.add("fade-in");
+
+    const spans = blogText.querySelectorAll("span");
+    spans.forEach((span,i)=>{
+      setTimeout(()=>span.classList.add("show"), i*100);
+    });
+
+    resetBlogScroll();
+  },300);
 }
 </script>
 
